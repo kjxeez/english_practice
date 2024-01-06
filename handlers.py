@@ -1,16 +1,18 @@
 import asyncio
-import os
+
 from typing import Dict, Any
 
 from aiogram.filters import CommandStart
 from aiogram.fsm.state import State, StatesGroup
 
-from aiogram import Router, F, Bot, Dispatcher
+from aiogram import Router, Bot, Dispatcher, types
 from aiogram.types import Message
 
 from aiogram_dialog import Dialog, Window, setup_dialogs, DialogManager
 from aiogram_dialog.widgets.text import Format, Const
-from aiogram_dialog.widgets.kbd import Checkbox, Button, Row, Cancel, Start
+from aiogram_dialog.widgets.kbd import Checkbox, Row, Cancel, Start
+
+from aiogram.filters.command import Command
 
 
 class MainMenu(StatesGroup):
@@ -95,6 +97,11 @@ async def start(message: Message, dialog_manager: DialogManager):
 async def main():
     bot = Bot(token="6732194106:AAFkiDRcbnlYCoQAQeTvEufjuiTZF3lWDYs")
     dp = Dispatcher()
+
+    @dp.message(Command("pic"))
+    async def send_image(message: types.Message):
+        await bot.send_photo(chat_id=message.chat.id, photo='https://placepic.ru/wp-content/uploads/2018/11/0_b7c8e_fa32e8d_orig.jpg')
+
     dp.include_router(main_menu)
     dp.include_router(settings)
     dp.include_router(router)
